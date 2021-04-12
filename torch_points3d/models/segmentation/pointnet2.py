@@ -102,16 +102,17 @@ class PointNet2_D(UnetBasedModel):
 
         self.output = self.FC_layer(last_feature).transpose(1, 2).contiguous().view((-1, self._num_classes))
 
+        self.data_visual = self.input
+        self.data_visual.pred = torch.max(self.output, -1)[1].reshape(data.pos.shape[0:2])
+
         if self._weight_classes is not None:
             self._weight_classes = self._weight_classes.to(self.output.device)
         if self.labels is not None:
             self.loss_seg = F.cross_entropy(
                 self.output, self.labels, weight=self._weight_classes, ignore_index=IGNORE_LABEL
             )
-
-        #self.data_visual = self.input
-        #self.data_visual.y = torch.reshape(self.labels, data.pos.shape[0:2])
-        #self.data_visual.pred = torch.max(self.output, -1)[1].reshape(data.pos.shape[0:2])
+            self.data_visual.y = torch.reshape(self.labels, data.pos.shape[0:2])
+        
         return self.output
 
     def backward(self):
