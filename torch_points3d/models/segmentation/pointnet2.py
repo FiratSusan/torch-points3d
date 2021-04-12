@@ -109,9 +109,9 @@ class PointNet2_D(UnetBasedModel):
                 self.output, self.labels, weight=self._weight_classes, ignore_index=IGNORE_LABEL
             )
 
-        self.data_visual = self.input
-        self.data_visual.y = torch.reshape(self.labels, data.pos.shape[0:2])
-        self.data_visual.pred = torch.max(self.output, -1)[1].reshape(data.pos.shape[0:2])
+        #self.data_visual = self.input
+        #self.data_visual.y = torch.reshape(self.labels, data.pos.shape[0:2])
+        #self.data_visual.pred = torch.max(self.output, -1)[1].reshape(data.pos.shape[0:2])
         return self.output
 
     def backward(self):
